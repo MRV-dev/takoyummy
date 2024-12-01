@@ -187,13 +187,13 @@ body {
 }
 
 #trendsChart {
-    width: 100%; 
-    height: 500px; 
+    width: 10%; 
+    height: 10px; 
 }
 
 #topSellingList {
     list-style-type: none;
-    padding: 0;
+    margin-bottom: 60%;
 }
 
 #topSellingList li {
