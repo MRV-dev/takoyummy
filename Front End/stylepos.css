@@ -250,6 +250,19 @@
     background-color: #45a049;
 }
 
+.submit-order {
+    background-color: #4CAF50;
+    height: 40px;
+    width: 40%;
+    margin-top: 10px;
+    font-size: 20px;
+    border-radius: 10px;
+}
+.submit-order:hover {
+    background-color: rgb(17, 214, 44);
+    color: #ffff;
+}
+
 .input1 {
     height: 50px;
     width: 100%;
