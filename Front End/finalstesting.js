@@ -8,6 +8,6 @@
         if (username && password) {
             window.location.href = 'pos.html'; // Redirect to POS page
         } else {
-            alert('Please fill out all fields!');
+            alert('afde');
         }
     });

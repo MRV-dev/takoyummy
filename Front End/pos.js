@@ -1,149 +1,131 @@
-let total = 0;
-let orderDetails = [];  // This array will hold the order details
+document.addEventListener("DOMContentLoaded", () => {
+    let total = 0;
+    const orderDetails = [];
+    const orderSummaryList = document.getElementById("order-summary-list");
+    const totalDisplay = document.querySelector(".total");
+    const submitButton = document.getElementById("submitOrder");
+    const paymentInput = document.querySelector(".input1");
+    const changeDisplay = document.querySelector(".change");
 
-const productCards = document.querySelectorAll('.product-card');
+    let lastCalculatedChange = null;  
 
-productCards.forEach(card => {
-    let quantityElement = card.querySelector('.product-quantity');
-    let addButton = card.querySelector('.add');
-    let minusButton = card.querySelector('.minus');
-    let priceElement = card.querySelector('.price');
-    let productName = card.querySelector('p').textContent;
-    let orderSummary = document.querySelector('#order-summary-list');
+    
+    document.querySelectorAll(".product-card").forEach((card) => {
+        const addButton = card.querySelector(".add");
+        const minusButton = card.querySelector(".minus");
+        const quantityDisplay = card.querySelector(".product-quantity");
+        const price = parseFloat(card.querySelector(".price").textContent);
+        const productName = card.querySelector("p").textContent.trim();
 
-    let num = 0;
+        let quantity = 0;
 
-    addButton.addEventListener('click', () => {
-        num += 1;
-        quantityElement.innerHTML = num;
-        updateOrderSummary();
+        addButton.addEventListener("click", () => {
+            quantity++;
+            quantityDisplay.textContent = quantity;
+            updateOrder(productName, price, quantity);
+        });
+
+        minusButton.addEventListener("click", () => {
+            if (quantity > 0) {
+                quantity--;
+                quantityDisplay.textContent = quantity;
+                updateOrder(productName, price, quantity);
+            }
+        });
     });
 
-    minusButton.addEventListener('click', () => {
-        if (num > 0) {
-            num--;
-            quantityElement.innerHTML = num;
-            updateOrderSummary();
-        }
-    });
+    
+    function updateOrder(productName, price, quantity) {
+        const existingOrder = orderDetails.find((item) => item.name === productName);
 
-    function updateOrderSummary() {
-        let productIndex = orderDetails.findIndex(item => item.name === productName);
-
-        if (productIndex > -1) {
-            orderDetails[productIndex].quantity = num;
-        } else {
-            orderDetails.push({ name: productName, quantity: num, price: parseFloat(priceElement.innerHTML) });
+        if (existingOrder) {
+            if (quantity > 0) {
+                existingOrder.quantity = quantity;
+                existingOrder.totalPrice = quantity * price;
+            } else {
+                const index = orderDetails.indexOf(existingOrder);
+                orderDetails.splice(index, 1);
+            }
+        } else if (quantity > 0) {
+            orderDetails.push({ name: productName, quantity, totalPrice: quantity * price });
         }
 
         renderOrderSummary();
     }
 
+    
     function renderOrderSummary() {
-        let orderHTML = "";
-        let newTotal = 0;
+        orderSummaryList.innerHTML = "";
+        total = 0;
 
-        orderDetails.forEach(item => {
-            if (item.quantity > 0) {
-                orderHTML += `
-                    <div class="order-item">
-                        <div class="item-details">${item.name} x${item.quantity}</div>
-                        <div class="item-price">₱${(item.price * item.quantity).toFixed(2)}</div>
-                    </div>
-                `;
-                newTotal += item.price * item.quantity;
-            }
-        });
-
-        total = newTotal;
-        orderSummary.innerHTML = orderHTML;
-
-        if (!document.querySelector('.payment-section')) {
-            const paymentSection = `
-                <div class="total">Total: ₱${total.toFixed(2)}</div>
-                <div class="payment-section">
-                    <h3>Payment</h3>
-                    <input class="input1" type="text" placeholder="Enter Payment">
-                    <div class="change">Change: </div>
-                </div>
+        orderDetails.forEach((item) => {
+            total += item.totalPrice;
+            const itemElement = document.createElement("div");
+            itemElement.classList.add("order-item");
+            itemElement.innerHTML = `
+                <span>${item.name} x${item.quantity}</span>
+                <span>₱${item.totalPrice.toFixed(2)}</span>
             `;
-            orderSummary.insertAdjacentHTML('beforeend', paymentSection);
-        } else {
-            document.querySelector('.total').innerHTML = `Total: ₱${total.toFixed(2)}`;
-        }
+            orderSummaryList.appendChild(itemElement);
+        });
 
-        bindPaymentInputEvent();
-        bindSubmitOrderEvent();
+        totalDisplay.textContent = `Total: ₱${total.toFixed(2)}`;
     }
 
-    function bindPaymentInputEvent() {
-        const paymentInput = document.querySelector('.input1');
-        const changeDisplay = document.querySelector('.change');
 
-        paymentInput.addEventListener('input', () => {
-            const payment = parseFloat(paymentInput.value);
-            if (isNaN(payment) || payment <= 0) {
-                changeDisplay.innerHTML = "Change: Please enter a valid amount.";
-                return;
-            }
-
+    
+    paymentInput.addEventListener("input", () => {
+        const payment = parseFloat(paymentInput.value);
+        if (isNaN(payment) || payment < total) {
+            changeDisplay.textContent = `Change: ₱0.00`;
+            lastCalculatedChange = null;
+        } else {
             const change = payment - total;
-            if (change < 0) {
-                changeDisplay.innerHTML = "Change: Insufficient funds";
-            } else {
-                changeDisplay.innerHTML = `Change: ₱${change.toFixed(2)}`;
-            }
-        });
-    }
-
-    function bindSubmitOrderEvent() {
-        document.getElementById('submitOrder').addEventListener('click', submitOrder);
-    }
-});
-
-// Submit Order Function
-async function submitOrder() {
-    try {
-        const paymentInput = parseFloat(document.querySelector('.input1').value);
-        console.log('Submitting order:', orderDetails);
-
-        const response = await fetch('/pos/submit-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                items: orderDetails.filter(item => item.quantity > 0),
-                payment: paymentInput,
-            }),
-        });
-
-        const result = await response.json();
-        console.log('Response:', result);
-
-        if (response.ok) {
-            alert('Order submitted successfully!');
-            showReceipt(result.order);
-        } else {
-            alert(result.error);
+            changeDisplay.textContent = `Change: ₱${change.toFixed(2)}`;
+            lastCalculatedChange = change;  
         }
-    } catch (error) {
-        console.error('Error submitting order:', error);
-    }
-}
+    });
 
-function showReceipt(order) {
-    const modal = document.createElement('div');
-    modal.classList.add('receipt-modal');
-    modal.innerHTML = `
-        <h2>Receipt</h2>
-        <div>${order.items.map(item => `${item.name} x${item.quantity}`).join('<br>')}</div>
-        <p>Total: ₱${order.totalPrice.toFixed(2)}</p>
-        <p>Payment: ₱${order.payment.toFixed(2)}</p>
-        <p>Change: ₱${order.change.toFixed(2)}</p>
-        <button onclick="closeReceipt()">Close</button>
-    `;
-    document.body.appendChild(modal);
-}
+    
+    submitButton.addEventListener("click", () => {
+        const payment = parseFloat(paymentInput.value);
 
-function closeReceipt() {
-    document.querySelector('.receipt-modal').remove();
-}
+        if (isNaN(payment) || payment < total) {
+            alert("Invalid or insufficient payment.");
+            return;
+        }
+
+        
+        const saleData = {
+            items: orderDetails.map(item => ({
+                name: item.name,
+                quantity: item.quantity,
+                price: item.totalPrice / item.quantity, 
+            })),
+            totalPrice: total,
+            payment: payment,
+            change: lastCalculatedChange !== null ? lastCalculatedChange : (payment - total),
+        };
+
+        
+        fetch('http://localhost:5050/api/pos/calculate', { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(saleData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Sale submitted:", data);
+            alert("Order submitted successfully!");
+            resetPOS();  // Reset the POS system after successful submission
+        })
+        .catch(error => {
+            console.error("Error submitting sale:", error);
+            alert("Failed to submit sale.");
+        });
+    });
+
+
+});

@@ -22,6 +22,7 @@
     height: 70px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 1000;
+    overflow: hidden;
 }
 
 .navbar-logo {
@@ -164,7 +165,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50px; /* Set a fixed size */
+    width: 50px; 
     height: 50px;
     border-radius: 50%;
     font-size: 1.5rem;
@@ -176,28 +177,28 @@
 }
 
 .quantity button.minus {
-    background: linear-gradient(145deg, #d32f2f, #b71c1c); /* Gradient red */
+    background: linear-gradient(145deg, #d32f2f, #b71c1c); 
 }
 
 .quantity button.minus:hover {
-    background: linear-gradient(145deg, #f44336, #d32f2f); /* Lighter red on hover */
-    transform: translateY(-2px); /* Slight lift effect */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+    background: linear-gradient(145deg, #f44336, #d32f2f); 
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
 }
 
 .quantity button.add {
-    background: linear-gradient(145deg, #388e3c, #1b5e20); /* Gradient green */
+    background: linear-gradient(145deg, #388e3c, #1b5e20); 
 }
 
 .quantity button.add:hover {
-    background: linear-gradient(145deg, #4caf50, #388e3c); /* Lighter green on hover */
-    transform: translateY(-2px); /* Slight lift effect */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+    background: linear-gradient(145deg, #4caf50, #388e3c);
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
 }
 
 /* Optional: Add a ripple effect on click */
 .quantity button:active {
-    transform: translateY(1px); /* Small "press" effect */
+    transform: translateY(1px); 
 }
 
 
@@ -251,15 +252,17 @@
 }
 
 .submit-order {
-    background-color: #4CAF50;
-    height: 40px;
-    width: 40%;
-    margin-top: 10px;
+    background-color: #48a44b;
+    height: 60px;
+    color: white;
+    width: 100%;
+    margin-top: 60px;
     font-size: 20px;
     border-radius: 10px;
+    margin-left: -0.1%;
 }
 .submit-order:hover {
-    background-color: rgb(17, 214, 44);
+    background-color: rgb(4, 134, 21);
     color: #ffff;
 }
 
@@ -324,13 +327,20 @@
 /* Media Query */
 @media (max-width: 768px) {
     .sidebar {
-        position: static; /* Make sidebar stack in mobile */
+        position: static; 
         width: 100%;
         height: auto;
     }
 
     .main-content {
-        margin-left: 0; /* Full width for main content */
+        margin-left: 0; 
     }
 }
+
+
+body, html{
+    overflow: hidden;
+    height: 100%;
+}
+
 
