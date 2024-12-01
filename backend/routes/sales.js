@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
 
         // Save to the database
         const savedSale = await sale.save();
-        res.status(201).json(savedSale);  // Send back the saved sale data
+        res.status(201).json(savedSale);
 
     } catch (err) {
         res.status(500).json({ error: err.message });

@@ -43,6 +43,21 @@ app.use('/api/v1/users', userRoutes)
 app.use('/api/v1/ingredients', ingredientsRoutes)
 app.use('/api/pos', posRoutes)
 app.use('/api/v1/sales', salesRoutes)
+app.get('/api/sales/trends', async (req, res) => {
+    try {
+        const salesData = await db.query(
+            `SELECT day, SUM(sales) as total_sales 
+             FROM sales 
+             GROUP BY day 
+             ORDER BY FIELD(day, 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')`
+        );
+        res.json(salesData);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch sales data' });
+    }
+});
+
 
 // Start the server
 const PORT = process.env.PORT || 5050;

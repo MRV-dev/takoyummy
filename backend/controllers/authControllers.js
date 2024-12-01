@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const account = require('../models/userModel');
 const SECRET_KEY = 'your_secret_key';
 
-// Login a user and store token in cookie
+
 const loginUser = async (req, res) => {
     const { username, password } = req.body;
 
@@ -27,7 +27,7 @@ const loginUser = async (req, res) => {
         res.cookie('auth_token', token, {
             httpOnly: true, 
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 3600000, 
+            maxAge: 3600000,
         });
 
         res.status(200).json({ message: 'Login successful' });
@@ -37,13 +37,14 @@ const loginUser = async (req, res) => {
     }
 };
 
-// Logout user by clearing the cookie
+
+
+
 const logoutUser = (req, res) => {
     res.clearCookie('auth_token');
     res.status(200).json({ message: 'Logged out successfully' });
 };
 
-// Middleware to validate token from cookies
 const authenticateToken = (req, res, next) => {
     const token = req.cookies.auth_token;
 
@@ -53,7 +54,7 @@ const authenticateToken = (req, res, next) => {
 
     jwt.verify(token, SECRET_KEY, (err, user) => {
         if (err) {
-            return res.status(403).json({ error: 'Invalid or expired token' });
+            return res.status(403).json({ error: 'Session expired, please log in again' });
         }
         req.user = user;
         next();
