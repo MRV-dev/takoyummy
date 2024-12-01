@@ -7,9 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const paymentInput = document.querySelector(".input1");
     const changeDisplay = document.querySelector(".change");
 
-    let lastCalculatedChange = null;  
+    let lastCalculatedChange = null;
 
-    
     document.querySelectorAll(".product-card").forEach((card) => {
         const addButton = card.querySelector(".add");
         const minusButton = card.querySelector(".minus");
@@ -34,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    
     function updateOrder(productName, price, quantity) {
         const existingOrder = orderDetails.find((item) => item.name === productName);
 
@@ -53,9 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
         renderOrderSummary();
     }
 
-    
     function renderOrderSummary() {
-        orderSummaryList.innerHTML = "";
+        orderSummaryList.innerHTML = ""; 
         total = 0;
 
         orderDetails.forEach((item) => {
@@ -66,14 +63,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span>${item.name} x${item.quantity}</span>
                 <span>₱${item.totalPrice.toFixed(2)}</span>
             `;
-            orderSummaryList.appendChild(itemElement);
+            orderSummaryList.prepend(itemElement);  
         });
 
         totalDisplay.textContent = `Total: ₱${total.toFixed(2)}`;
     }
 
-
-    
     paymentInput.addEventListener("input", () => {
         const payment = parseFloat(paymentInput.value);
         if (isNaN(payment) || payment < total) {
@@ -82,11 +77,11 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             const change = payment - total;
             changeDisplay.textContent = `Change: ₱${change.toFixed(2)}`;
-            lastCalculatedChange = change;  
+            lastCalculatedChange = change;
         }
     });
 
-    
+   
     submitButton.addEventListener("click", () => {
         const payment = parseFloat(paymentInput.value);
 
@@ -95,20 +90,19 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        
+
         const saleData = {
             items: orderDetails.map(item => ({
                 name: item.name,
                 quantity: item.quantity,
-                price: item.totalPrice / item.quantity, 
+                price: item.totalPrice / item.quantity,
             })),
             totalPrice: total,
             payment: payment,
             change: lastCalculatedChange !== null ? lastCalculatedChange : (payment - total),
         };
 
-        
-        fetch('http://localhost:5050/api/pos/calculate', { 
+        fetch('http://localhost:5050/api/pos/calculate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -119,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(data => {
             console.log("Sale submitted:", data);
             alert("Order submitted successfully!");
-            resetPOS();  // Reset the POS system after successful submission
+            resetPOS();  
         })
         .catch(error => {
             console.error("Error submitting sale:", error);
@@ -127,5 +121,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    function resetPOS() {
+        orderDetails.length = 0;  
+        total = 0;                
+        lastCalculatedChange = null;
+        
 
+        orderSummaryList.innerHTML = "";
+        totalDisplay.textContent = `Total: ₱0.00`;
+        paymentInput.value = "";  
+        changeDisplay.textContent = `Change: ₱0.00`; 
+
+        
+        document.querySelectorAll(".product-card").forEach((card) => {
+            const quantityDisplay = card.querySelector(".product-quantity");
+            quantityDisplay.textContent = '0';  
+        });
+    }
 });

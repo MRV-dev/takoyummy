@@ -6,7 +6,7 @@ router.get('/', async (req, res) => {
     try {
         console.log("Received GET request for sales");
         const sales = await Sale.find().sort({ date: -1 });
-        res.status(200).json(sales);  // Send data as JSON
+        res.status(200).json(sales);  // Send data sa JSON
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
 
         // Save to the database
         const savedSale = await sale.save();
-        res.status(201).json(savedSale);  // Send back the saved sale data
+        res.status(201).json(savedSale);
 
     } catch (err) {
         res.status(500).json({ error: err.message });
