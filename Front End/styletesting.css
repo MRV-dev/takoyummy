@@ -1,4 +1,4 @@
-
+/* General Styles */
 * {
     margin: 0;
     padding: 0;
@@ -6,18 +6,19 @@
     font-family: Arial, sans-serif;
 }
 body {
-    background-color: #f8f8f8;
+    background-color: white;
 }
 .container {
     display: flex;
     width: 100%;
     height: 100vh;
 }
+
+/* Left Panel */
 .left-panel {
-    background-color: red;
+    background-color: rgba(247, 6, 6, 0.966);
     color: white;
     width: 40%;
-    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -29,55 +30,46 @@ body {
     font-size: 2.5rem;
     margin-bottom: 20px;
 }
-.left-panel .logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
 .left-panel .logo img {
     width: 90px;
     height: 90px;
     margin-bottom: 10px;
     background-color: #f8f8f8;
+    border-radius: 50%;
 }
 .left-panel .logo h2 {
     font-size: 1.8rem;
-    margin-top: 0;
 }
-.left-panel .footer-text {
-    position: absolute;
-    bottom: 20px;
-    width: 100%;
-    text-align: center;
-    font-size: 0.8rem;
-}
+
+/* Right Panel */
 .right-panel {
     width: 60%;
-    background-color: white;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #f5f5f5;
 }
 
-.form-container {
+/* Form Box */
+.form-box {
+    background-color: white; /* Box background */
+    padding: 30px; /* Spacing inside the box */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Shadow for the box */
+    width: 100%;
+    max-width: 400px; /* Limit the width */
     text-align: center;
-    width: 80%;
-    max-width: 400px;
 }
-
-.form-container h2 {
-    color: #e74c3c;
+.form-box h2 {
+    color: #f14d3b;
     font-size: 2rem;
     margin-bottom: 10px;
 }
-
-.form-container p {
+.form-box p {
     margin-bottom: 20px;
     color: #333;
 }
-
-.form-container input {
+.form-box input {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
@@ -85,11 +77,10 @@ body {
     border-radius: 5px;
     font-size: 1rem;
 }
-
-.login-btn {
+.form-box .login-btn {
     width: 100%;
     padding: 12px;
-    background-color: #e74c3c;
+    background-color: #f10707;
     color: white;
     border: none;
     border-radius: 5px;
@@ -97,26 +88,21 @@ body {
     cursor: pointer;
     margin-top: 10px;
 }
-
-.login-btn:hover {
+.form-box .login-btn:hover {
     background-color: #d63b2a;
 }
-
-.trouble-text {
+.form-box .trouble-text {
     margin-top: 15px;
     color: #888;
 }
-
-.signup-text {
+.form-box .signup-text {
     margin-top: 15px;
     color: #333;
 }
-
-.signup-text a {
+.form-box .signup-text a {
     color: #e74c3c;
     text-decoration: none;
 }
-
-.signup-text a:hover {
+.form-box .signup-text a:hover {
     text-decoration: underline;
 }
